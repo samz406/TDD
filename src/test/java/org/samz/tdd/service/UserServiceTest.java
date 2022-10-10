@@ -3,40 +3,42 @@ package org.samz.tdd.service;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
 import org.samz.tdd.model.Role;
 import org.samz.tdd.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
-//@RunWith(PowerMockRunner.class)
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class UserServiceTest extends TestCase {
 
 
-    @Mock
-    RoleService roleService;
-
-    @InjectMocks
+    @Autowired
     private UserService userService;
 
-    @BeforeEach
-    public void before(){
+    /**
+     *
+     */
+    @MockBean
+    private RoleService roleService;
+
+    @Before
+    public void before() {
 
         MockitoAnnotations.openMocks(this);
+        //实现依赖注入的bean调用的方法
+        Mockito.when(roleService.getRole("2")).thenReturn(new Role("1"));
 
     }
 
     @Test
     public void testGetUser() {
-
-        userService = PowerMockito.mock(UserService.class);
-        roleService = PowerMockito.mock(RoleService.class);
-
-        Mockito.when(roleService.getRole("2")).thenReturn(new Role("role2"));
         User user = userService.getUser();
         assertNotNull(user);
     }
